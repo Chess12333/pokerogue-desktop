@@ -27,6 +27,19 @@ const PATCHES = [
   ['mefull', 'loading-scene', 'if(b.getPlayerParty().length===6){let t={options:[{label:k.t(`partyUiHandler:summary`)', 'if((window.PRS_COOP_TEAMS&&window.PRS_COOP_FULL?window.PRS_COOP_FULL():b.getPlayerParty().length===6)){let t={options:[{label:k.t(`partyUiHandler:summary`)', []],
   // taken out again (until 11-14 the starter points limit was doubled; now each player has their own round)
   ['points-off', 'battle-scene', null, 'default:e.value=10}return In(1,e),e.value}', ['default:e.value=10}return In(1,e),e.value*(window.PRS_COOP_TEAMS?2:1)}']],
+
+  // ---- 进阶（ascension）：把几个写死的上限改成运行时可变，供 coop/ascension.js 使用 ----
+  ['partycap', 'battle-scene',
+    'window.PRS_COOP_FULL?window.PRS_COOP_FULL():B.getPlayerParty().length===6',
+    'window.PRS_COOP_FULL?(window.PRS_COOP_FULL()||B.getPlayerParty().length>=(window.PRS_PARTY_MAX?window.PRS_PARTY_MAX():99)):B.getPlayerParty().length>=(window.PRS_PARTY_MAX?window.PRS_PARTY_MAX():6)', []],
+  ['mepartycap', 'loading-scene',
+    'window.PRS_COOP_FULL?window.PRS_COOP_FULL():b.getPlayerParty().length===6',
+    'window.PRS_COOP_FULL?(window.PRS_COOP_FULL()||b.getPlayerParty().length>=(window.PRS_PARTY_MAX?window.PRS_PARTY_MAX():99)):b.getPlayerParty().length>=(window.PRS_PARTY_MAX?window.PRS_PARTY_MAX():6)', []],
+  ['starteradd', 'battle-scene', 'this.partyStarterIds.length<6', 'this.partyStarterIds.length<(window.PRS_STARTER_MAX?window.PRS_STARTER_MAX():6)', []],
+  ['starterrand', 'battle-scene', 'this.partyStarterIds.length>=6', 'this.partyStarterIds.length>=(window.PRS_STARTER_MAX?window.PRS_STARTER_MAX():6)', []],
+  ['startericons', 'battle-scene', 'this.partyIcons=[];for(let e=0;e<6;e++){', 'this.partyIcons=[];for(let e=0;e<(window.PRS_STARTER_MAX?window.PRS_STARTER_MAX():6);e++){', []],
+  ['starterpoints', 'battle-scene', 'default:e.value=10}return In(1,e),e.value}', 'default:e.value=(window.PRS_POINTS?window.PRS_POINTS():10)}return In(1,e),e.value}', []],
+  ['rewardtier', 'loading-scene', 't>255?0:t>60?1:t>12?2:t?3:4', 't>(window.PRS_T?window.PRS_T(2):255)?0:t>(window.PRS_T?window.PRS_T(1):60)?1:t>(window.PRS_T?window.PRS_T(0):12)?2:t?3:4', []],
 ]
 const count = (s, sub) => s.split(sub).length - 1
 

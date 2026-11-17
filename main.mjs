@@ -291,6 +291,8 @@ function createWindow() {
   win.webContents.on('did-finish-load', () => {
     gamePageReady = true
     syncCoopHpMenu()
+    // 进阶（ascension）：每次页面加载后注入一遍，单人和合作房间都生效
+    try { win.webContents.executeJavaScript(readFileSync(path.join(__dirname, 'coop', 'ascension.js'), 'utf8') + '\n;0').catch(() => {}) } catch {}
     if (coop) injectCoop().catch(e => setCoopStatus('开房间失败：' + (e?.message || e), 'bad'))
     else if (coopAuto && !win.coopAutoDone) { win.coopAutoDone = true; openCoopRoom(coopAuto, !!process.env.PRS_COOP_LAN) }
   })
