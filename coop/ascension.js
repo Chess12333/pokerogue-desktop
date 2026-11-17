@@ -157,6 +157,25 @@
       };
       log('hook boss segments');
     }
+    // ---- A6 补一层：奖励和商店都拦——入库那一刻作废 ----
+    var am = s.addModifier;
+    if (typeof am === 'function' && !s.__prsMapBan) {
+      s.__prsMapBan = true;
+      s.addModifier = function (mod) {
+        try {
+          if (has(6)) {
+            var nm = mod && mod.type && mod.type.name ? String(mod.type.name) : '';
+            var grp = mod && mod.type && mod.type.group ? String(mod.type.group) : '';
+            if (nm.indexOf('地图') === 0 || grp === 'map') {
+              log('map banned at addModifier');
+              return Promise.resolve(false);
+            }
+          }
+        } catch (e) {}
+        return am.apply(this, arguments);
+      };
+      log('hook addModifier (地图作废)');
+    }
     var pm = s.phaseManager;
     if (pm && !pm.__prsPhase) {
       pm.__prsPhase = true;
